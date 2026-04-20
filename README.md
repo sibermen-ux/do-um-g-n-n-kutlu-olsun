@@ -3,113 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İyi Ki Doğdun Sevgilim!</title>
+    <title>Sana Bir Sürprizim Var ❤️</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fff5f7; overflow: hidden; color: #4a4a4a;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; color: #4a4a4a;
+            background-color: #fff5f7;
         }
+
+        /* EMOJİ YAĞMURU STİLLERİ */
+        .emoji-yagmur {
+            position: fixed;
+            top: -50px;
+            font-size: 24px;
+            user-select: none;
+            pointer-events: none; /* Metnin tıklanmasını engellemez */
+            z-index: 0; /* İçeriklerin arkasında kalması için */
+            animation: yagmur-dusis linear forwards;
+        }
+
+        @keyframes yagmur-dusis {
+            to { transform: translateY(110vh); }
+        }
+
+        /* KATMAN AYARLARI */
         .katman {
             width: 100%; height: 100vh; display: flex; flex-direction: column;
             align-items: center; justify-content: center; text-align: center;
-            position: absolute; top: 0; left: 0; transition: transform 0.8s ease-in-out;
+            position: absolute; top: 0; left: 0; transition: transform 1s cubic-bezier(0.85, 0, 0.15, 1);
             padding: 20px; box-sizing: border-box;
         }
-        #katman1 { z-index: 3; background: #fff5f7; }
-        #katman2 { z-index: 2; background: #ffffff; transform: translateY(100%); }
-        #katman3 { z-index: 1; background: #fdf2f4; transform: translateY(100%); overflow-y: auto; }
 
-        .kocaman-yazi { font-size: 3.5rem; font-weight: bold; color: #ff4d6d; margin-bottom: 20px; }
-        .geri-sayim { font-size: 5rem; font-weight: 900; color: #ff758f; }
+        #katman1 { background: linear-gradient(135deg, #fff5f7 0%, #ffe3ec 100%); z-index: 3; }
+
+        .romantik-cerceve {
+            border: 2px solid rgba(255, 77, 109, 0.2);
+            padding: 40px; border-radius: 30px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            min-height: 200px; display: flex; align-items: center; justify-content: center;
+        }
+
+        .kocaman-yazi { font-family: 'Dancing Script', cursive; font-size: 3rem; color: #ff4d6d; }
+
+        /* 2. KATMAN: MEKTUP */
+        #katman2 { 
+            z-index: 2; background: #ffffff; transform: translateY(100%);
+            overflow-y: auto; display: block; padding-top: 50px; padding-bottom: 100px;
+        }
 
         .mektup-kutu {
-            max-width: 600px; background: #fff; padding: 30px; border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.1); line-height: 1.8;
-            border: 2px dashed #ffb7c5;
+            max-width: 700px; margin: 0 auto; padding: 40px; border-radius: 30px;
+            background: rgba(255, 250, 250, 0.9); /* Biraz şeffaf ki emojiler hafif görünsün */
+            border: 1px solid #fce4ec; box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            text-align: left; position: relative; z-index: 10;
         }
 
+        .mektup-metni { font-size: 1.05rem; line-height: 1.8; color: #555; white-space: pre-line; }
+
+        /* 3. KATMAN: ŞİİRLER */
+        #katman3 { z-index: 1; background: #fffcfd; transform: translateY(100%); overflow-y: auto; }
+
         .siir-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
-            max-width: 450px; margin: 20px auto;
-        }
-        @media (max-width: 500px) {
-            .siir-grid { grid-template-columns: repeat(4, 1fr); }
-            .kocaman-yazi { font-size: 2.2rem; }
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+            max-width: 500px; margin: 20px auto; position: relative; z-index: 10;
         }
 
         .kutucuk {
-            width: 55px; height: 55px; background: #ffb7c5; color: white;
+            width: 60px; height: 60px; background: #ffe3ec; color: #ff4d6d;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s;
+            border-radius: 15px; cursor: pointer; font-weight: bold; transition: 0.4s;
         }
-        .kutucuk:hover { background: #ff4d6d; transform: scale(1.1); }
+        .kutucuk:hover { background: #ff4d6d; color: white; transform: scale(1.1); }
 
         .devam-btn {
-            position: fixed; bottom: 30px; right: 30px; padding: 12px 25px;
+            position: fixed; bottom: 30px; right: 30px; padding: 15px 35px;
             background: #ff4d6d; color: white; border: none; border-radius: 50px;
-            font-size: 1rem; font-weight: bold; cursor: pointer; display: none; z-index: 5;
+            font-size: 1rem; font-weight: bold; cursor: pointer; display: none; z-index: 100;
         }
 
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center;
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.8); z-index: 300; align-items: center; justify-content: center;
+            backdrop-filter: blur(8px);
         }
-        .modal-icerik {
-            background: white; padding: 30px; border-radius: 20px; max-width: 85%;
-            text-align: center; max-height: 80vh; overflow-y: auto;
-        }
+        .modal-icerik { background: white; padding: 40px; border-radius: 30px; max-width: 85%; text-align: center; }
+
+        @media (max-width: 600px) { .siir-grid { grid-template-columns: repeat(4, 1fr); } }
     </style>
 </head>
 <body>
 
     <section id="katman1" class="katman">
-        <div id="baslik" class="kocaman-yazi">HOŞ GELDİN SEVGİLİM! ❤️</div>
-        <div id="sayac" class="geri-sayim"></div>
-        <button id="btn1" class="devam-btn" onclick="gec(2)">DEVAM ➡️</button>
+        <div class="romantik-cerceve">
+            <div id="mesaj-ekrani" class="kocaman-yazi">Hoş Geldin Sevgilim...</div>
+            <div id="sayac" style="font-size: 6rem; font-family: 'Dancing Script'; color: #ff4d6d; display: none;"></div>
+        </div>
+        <button id="btn1" class="devam-btn" onclick="gec(2)">Sana Bir Mesajım Var ✨</button>
     </section>
 
     <section id="katman2" class="katman">
         <div class="mektup-kutu">
-            <h2 style="color: #ff4d6d;">Sana Sözlerim... 💌</h2>
-            <p id="benim-paragrafim" style="font-size: 1.1rem; color: #555;">
-                deneme yazısı deneme yazısı
-            </p>
+            <h2 style="font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #ff4d6d; text-align: center;">Canım Sevgilime... 💌</h2>
+            <div class="mektup-metni">
+                Merhaba şwmspwsm biraz heycan var kusura bakma aslında bu yazıyı çok önceden yazmıştım ama tamda hediyeni vereceğim zaman tartıştık olsun hayat işte her zaman mutlu olmuyoz hiç istemezdim doğum gününden önce tartışmak malesef oldu ama ne olursa olsun seni çok seviyorum bazen kırıyorum üzüyorum ne bilim bişiler oluyo ama ne kadar tartışsakda kavga etsekte sana olan aşkım sevgim güvenim hiç bir zaman bitmedi bitmicekte benim için o kadar kıymetlsinki kelimelere dökemem o kadar değişik, benim hakkımda düşüncelerini biliyorum insanlara olan sinirimi senden çıkarıyorum sinirlenince azarlıyorum ve daha fazlası aslında böyle yapmıyorum ama öyle anlaşılıyor seni suçlamıyorum hata bende , korkuyorum böyle bi an senin gözünden kalbinden bi anlık bile olsa çizik olmasını herşey için çok pişmanım, seni çok seviyorum be kızım 1 ay önceden başladım bu hediyeyi yapmaya bana gerçek aşkı sevgiyi güveni saf duyguyu yaşattın ne desem boş çok teşekkür ederimm bazen ne kadar salaklığım olsada beni üzmemek için yalnız kaldın yuttun hakkın ödenmez ama bu gün benim için milad oldu biliyormusun sanki bir yaşıma daha girmiş gibiyim sana söz veriyorum oturucam kendimi ölçücem herşeyi düşünücem sana karşı o eskş hatalarımı geri tekrarlamıcam buda sana İlhan sözü olsun seni çokmu çok seven adamın sözü senden ricam bana biras daha açık olman garip bir kişiliğim var biliyorum anlaması güç hala haraketlerim tavırlarım çocukca anlıyorum ama senden isteğim biras daha bana karşı açık olman, biliyormusun hayatımda ilk defa aşkı sevilmeyi yaşadım gerçek saf karşılıksız sevgiyi umarım bende sana yaşatabilmişimdir,İlk defa odamda bu kadar çok ağlıyorum bilmiyom normlade söylemem ama içimden geldi şqmspwms valla varya seni çok seviyorum be güzelim herşey için çok özür dilerim.
+
+                Saygılarımla seni deliler gibi seven İlhan...
+            </div>
         </div>
-        <button id="btn2" class="devam-btn" style="display: block;" onclick="gec(3)">ŞİİRLERE GEÇ ➡️</button>
+        <button id="btn2" class="devam-btn" style="display: block;" onclick="gec(3)">Devam Et ❤️</button>
     </section>
 
     <section id="katman3" class="katman">
-        <h2 style="color: #ff4d6d;">30 Gün, 30 Şiir ✨</h2>
+        <h2 style="font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #ff4d6d;">30 Gün, 30 Şiir ✨</h2>
         <div class="siir-grid" id="grid"></div>
     </section>
 
     <div id="modal" class="modal" onclick="kapat()">
-        <div class="modal-icerik">
-            <p id="siirMetni" style="font-size: 1.1rem; white-space: pre-line; color: #555;"></p>
-            <p style="color: #ff4d6d; margin-top: 15px;">❤️</p>
-        </div>
+        <div class="modal-icerik"><p id="siirMetni" style="font-size: 1.1rem; white-space: pre-line;"></p></div>
     </div>
 
     <script>
+        const hitaplar = ["İYİ Kİ DOĞDUN PRENSESİM", "HAYATIMIN ANLAMI", "AŞK BAHÇEM", "YAVRUM", "CEYLAN GÖZLÜM"];
+        const emojiler = ['💓','🍥','💖','🥰','🤩','🫶'];
+        let yagmurDurumu = false;
+
         window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('baslik').style.display = 'none';
-                baslatSayac();
+            const ekran = document.getElementById('mesaj-ekrani');
+            let i = 0;
+            const hitapInterval = setInterval(() => {
+                if (i < hitaplar.length) {
+                    ekran.style.opacity = 0;
+                    setTimeout(() => { ekran.innerText = hitaplar[i]; ekran.style.opacity = 1; i++; }, 500);
+                } else {
+                    clearInterval(hitapInterval);
+                    setTimeout(baslatGeriSayim, 1500);
+                }
             }, 2000);
         };
 
-        function baslatSayac() {
+        function emojiOlustur() {
+            if (!yagmurDurumu) return;
+            const e = document.createElement('div');
+            e.className = 'emoji-yagmur';
+            e.innerText = emojiler[Math.floor(Math.random() * emojiler.length)];
+            e.style.left = Math.random() * 100 + 'vw';
+            e.style.animationDuration = Math.random() * 3 + 2 + 's';
+            e.style.opacity = Math.random();
+            document.body.appendChild(e);
+            setTimeout(() => { e.remove(); }, 5000);
+        }
+
+        function baslatGeriSayim() {
+            document.getElementById('mesaj-ekrani').style.display = 'none';
+            const sayacDiv = document.getElementById('sayac');
+            sayacDiv.style.display = 'block';
             let s = 3;
-            const ekran = document.getElementById('sayac');
             let interval = setInterval(() => {
-                ekran.innerText = s;
+                sayacDiv.innerText = s;
                 if (s === 0) {
                     clearInterval(interval);
-                    ekran.innerHTML = "İYİ Kİ DOĞDUN! <br> 🎉🐱🌹";
-                    ekran.style.fontSize = "2.5rem";
+                    sayacDiv.innerHTML = "İYİ Kİ DOĞDUN!<br><span style='font-size: 1.5rem'>Seni Seviyorum ❤️</span>";
                     konfeti();
                     document.getElementById('btn1').style.display = 'block';
                 }
@@ -118,15 +176,13 @@
         }
 
         function konfeti() {
-            var end = Date.now() + (3 * 1000);
-            (function frame() {
-                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } });
-                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } });
-                if (Date.now() < end) { requestAnimationFrame(frame); }
-            }());
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         }
 
         function gec(n) {
+            yagmurDurumu = true; // 2. katmana geçerken yağmuru başlat
+            setInterval(emojiOlustur, 300); // Her 300ms'de bir emoji düşsün
+
             if (n === 2) {
                 document.getElementById('katman1').style.transform = 'translateY(-100%)';
                 document.getElementById('katman2').style.transform = 'translateY(0)';
@@ -181,13 +237,10 @@
                 grid.appendChild(k);
             }
         }
-
         function ac(i) {
-            const m = document.getElementById('siirMetni');
-            m.innerText = siirler[i];
+            document.getElementById('siirMetni').innerText = siirler[i];
             document.getElementById('modal').style.display = 'flex';
         }
-
         function kapat() { document.getElementById('modal').style.display = 'none'; }
     </script>
 </body>
